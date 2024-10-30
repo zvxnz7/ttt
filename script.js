@@ -1,100 +1,77 @@
-// Game state variables
-let board = ["", "", "", "", "", "", "", "", ""];
-let currentPlayer = "X";
-let gameActive = true;
+let gridSize = 5;
+let coins = 10000;
+let betAmount = 100; // Default bet per attempt
+let safeSpots = [];
+let uncoveredSpots = [];
+let bombsCount = 5;
 
-// Winning conditions (index patterns for a win)
-const winningConditions = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-];
+// Initialize board and bombs
+function initializeGame() {
+    // Reset game variables
+    uncoveredSpots = [];
+    safeSpots = Array.from({ length: gridSize * gridSize }, (_, i) => i);
+    safeSpots.sort(() => Math.random() - 0.5);
+    safeSpots = safeSpots.slice(0, gridSize * gridSize - bombsCount);
+    coins = 10000;
+    
+    renderBoard();
+    updateCoinsDisplay();
+}
 
-// HTML elements
-const cells = document.querySelectorAll(".cell");
-const statusText = document.getElementById("status");
-const resetButton = document.getElementById("reset-button");
+// Function to render the 5x5 grid
+function renderBoard() {
+    const board = document.getElementById('board');
+    board.innerHTML = '';
+    board.style.gridTemplateColumns = `repeat(${gridSize}, auto)`;
 
-// Initialize game
-function initGame() {
-    cells.forEach(cell => cell.addEventListener("click", handleCellClick));
-    resetButton.addEventListener("click", resetGame);
-    statusText.textContent = `Player ${currentPlayer}'s turn`;
+    for (let i = 0; i < gridSize * gridSize; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.addEventListener('click', () => handleCellClick(i));
+        board.appendChild(cell);
+    }
+}
+
+// Update coins display
+function updateCoinsDisplay() {
+    document.getElementById('coins').innerText = `Coins: ${coins}`;
 }
 
 // Handle cell click
-function handleCellClick(event) {
-    const cell = event.target;
-    const index = cell.getAttribute("data-index");
+function handleCellClick(index) {
+    if (uncoveredSpots.includes(index)) return;
 
-    if (board[index] !== "" || !gameActive) {
-        return;
+    uncoveredSpots.push(index);
+    if (safeSpots.includes(index)) {
+        coins += betAmount;
+        document.querySelectorAll('.cell')[index].classList.add('safe');
+    } else {
+        coins -= betAmount;
+        document.querySelectorAll('.cell')[index].classList.add('bomb');
     }
-
-    updateBoard(cell, index);
-    checkResult();
-}
-
-// Update board and switch players
-function updateBoard(cell, index) {
-    board[index] = currentPlayer;
-    cell.textContent = currentPlayer;
-    currentPlayer = currentPlayer === "X" ? "O" : "X";
-    statusText.textContent = `Player ${currentPlayer}'s turn`;
-}
-
-// Check result for win, draw, or ongoing
-// Check result for win, draw, or ongoing
-function checkResult() {
-    let roundWon = false;
-    let winningCells = [];
-
-    for (let condition of winningConditions) {
-        const [a, b, c] = condition;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            roundWon = true;
-            winningCells = [a, b, c];
-            break;
-        }
-    }
-
-    if (roundWon) {
-        statusText.textContent = `Player ${currentPlayer === "X" ? "O" : "X"} wins!`;
-        gameActive = false;
-        
-        // Add the 'win' class to each winning cell
-        winningCells.forEach(index => cells[index].classList.add("win"));
-    } else if (!board.includes("")) {
-        cells.forEach(cell => {
-            cell.classList.add("draw");// Remove 'win' class from all cells
-        });
-        statusText.textContent = "It's a draw!";
-        gameActive = false;
-    }
-}
-
-// Reset the game
-function resetGame() {
-    board = ["", "", "", "", "", "", "", "", ""];
-    currentPlayer = "X";
-    gameActive = true;
     
-    cells.forEach(cell => {
-        cell.textContent = "";
-        cell.classList.remove("win");
-        cell.classList.remove("draw");// Remove 'win' class from all cells
+    updateCoinsDisplay();
+    checkGameOver();
+}
+
+// Check if the game is over
+function checkGameOver() {
+    if (coins <= 0) {
+        alert("Game over! You've run out of coins.");
+        initializeGame();
+    } else if (uncoveredSpots.length === gridSize * gridSize - bombsCount) {
+        alert("Congratulations! You've uncovered all safe spots.");
+        initializeGame();
+    }
+}
+
+// Initialize game on load
+document.addEventListener('DOMContentLoaded', () => {
+    initializeGame();
+    document.getElementById('betForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const betInput = document.getElementById('betAmount');
+        betAmount = parseInt(betInput.value) || 100;
+        betInput.value = '';
     });
-    
-    statusText.textContent = `Player ${currentPlayer}'s turn`;
-}
-
-
-
-
-// Start the game
-initGame();
+});
