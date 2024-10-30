@@ -70,6 +70,9 @@ function checkResult() {
         // Add the 'win' class to each winning cell
         winningCells.forEach(index => cells[index].classList.add("win"));
     } else if (!board.includes("")) {
+        cells.forEach(cell => {
+            cell.classList.add("draw");// Remove 'win' class from all cells
+        });
         statusText.textContent = "It's a draw!";
         gameActive = false;
     }
@@ -83,7 +86,8 @@ function resetGame() {
     
     cells.forEach(cell => {
         cell.textContent = "";
-        cell.classList.remove("win"); // Remove 'win' class from all cells
+        cell.classList.remove("win");
+        cell.classList.remove("draw");// Remove 'win' class from all cells
     });
     
     statusText.textContent = `Player ${currentPlayer}'s turn`;
