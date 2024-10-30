@@ -1,24 +1,19 @@
 let gridSize = 5;
 let coins = 10000;
-let betAmount = 100; // Default bet per attempt
+let betAmount = 100;
 let safeSpots = [];
 let uncoveredSpots = [];
 let bombsCount = 5;
 
-// Initialize board and bombs
 function initializeGame() {
-    // Reset game variables
     uncoveredSpots = [];
     safeSpots = Array.from({ length: gridSize * gridSize }, (_, i) => i);
     safeSpots.sort(() => Math.random() - 0.5);
     safeSpots = safeSpots.slice(0, gridSize * gridSize - bombsCount);
-    coins = 10000;
-    
     renderBoard();
     updateCoinsDisplay();
 }
 
-// Function to render the 5x5 grid
 function renderBoard() {
     const board = document.getElementById('board');
     board.innerHTML = '';
@@ -32,12 +27,10 @@ function renderBoard() {
     }
 }
 
-// Update coins display
 function updateCoinsDisplay() {
     document.getElementById('coins').innerText = `Coins: ${coins}`;
 }
 
-// Handle cell click
 function handleCellClick(index) {
     if (uncoveredSpots.includes(index)) return;
 
@@ -49,12 +42,11 @@ function handleCellClick(index) {
         coins -= betAmount;
         document.querySelectorAll('.cell')[index].classList.add('bomb');
     }
-    
+
     updateCoinsDisplay();
     checkGameOver();
 }
 
-// Check if the game is over
 function checkGameOver() {
     if (coins <= 0) {
         alert("Game over! You've run out of coins.");
@@ -65,7 +57,6 @@ function checkGameOver() {
     }
 }
 
-// Initialize game on load
 document.addEventListener('DOMContentLoaded', () => {
     initializeGame();
     document.getElementById('betForm').addEventListener('submit', (e) => {
