@@ -62,6 +62,12 @@ h1 {
     transition: scale 1s;
 }
 
+.cell.draw {
+    background-color: #ff6961;
+
+    transition: background-color 1s;
+}
+
 button {
     padding: 10px 20px;
     border: none;
