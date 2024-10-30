@@ -44,19 +44,21 @@ function handleCellClick(event) {
 function updateBoard(cell, index) {
     board[index] = currentPlayer;
     cell.textContent = currentPlayer;
-    cell.style.color = currentPlayer === "X" ? "#f0a500" : "#34b3f1";
     currentPlayer = currentPlayer === "X" ? "O" : "X";
     statusText.textContent = `Player ${currentPlayer}'s turn`;
 }
 
 // Check result for win, draw, or ongoing
+// Check result for win, draw, or ongoing
 function checkResult() {
     let roundWon = false;
+    let winningCells = [];
 
     for (let condition of winningConditions) {
         const [a, b, c] = condition;
         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             roundWon = true;
+            winningCells = [a, b, c];
             break;
         }
     }
@@ -64,6 +66,9 @@ function checkResult() {
     if (roundWon) {
         statusText.textContent = `Player ${currentPlayer === "X" ? "O" : "X"} wins!`;
         gameActive = false;
+        
+        // Add the 'win' class to each winning cell
+        winningCells.forEach(index => cells[index].classList.add("win"));
     } else if (!board.includes("")) {
         statusText.textContent = "It's a draw!";
         gameActive = false;
@@ -75,9 +80,17 @@ function resetGame() {
     board = ["", "", "", "", "", "", "", "", ""];
     currentPlayer = "X";
     gameActive = true;
-    cells.forEach(cell => (cell.textContent = ""));
+    
+    cells.forEach(cell => {
+        cell.textContent = "";
+        cell.classList.remove("win"); // Remove 'win' class from all cells
+    });
+    
     statusText.textContent = `Player ${currentPlayer}'s turn`;
 }
+
+
+
 
 // Start the game
 initGame();
