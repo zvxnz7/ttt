@@ -3,27 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Tic Tac Toe</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Bomb Game</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="game-container">
-        <h1>Tic Tac Toe</h1>
-        <div id="game-board">
-            <!-- 9 Squares for Tic Tac Toe grid -->
-            <div class="cell" data-index="0"></div>
-            <div class="cell" data-index="1"></div>
-            <div class="cell" data-index="2"></div>
-            <div class="cell" data-index="3"></div>
-            <div class="cell" data-index="4"></div>
-            <div class="cell" data-index="5"></div>
-            <div class="cell" data-index="6"></div>
-            <div class="cell" data-index="7"></div>
-            <div class="cell" data-index="8"></div>
-        </div>
-        <button id="reset-button">Restart Game</button>
-        <p id="status"></p>
-    </div>
+    <div id="coins">Coins: 10000</div>
+    <div id="board" class="board"></div>
+
+    <form id="betForm">
+        <label for="betAmount">Set Bet Amount:</label>
+        <input type="number" id="betAmount" placeholder="100" />
+        <button type="submit">Set Bet</button>
+    </form>
+
     <script src="script.js"></script>
 </body>
 </html>
