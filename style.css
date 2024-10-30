@@ -2,6 +2,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    color: #ffffff;
     font-family: Arial, sans-serif;
 }
 
@@ -20,14 +21,14 @@ body {
 
 h1 {
     margin-bottom: 20px;
-    color: #f0a500;
+    color: #ffffff;
 }
 
 #game-board {
     display: grid;
     grid-template-columns: repeat(3, 100px);
     grid-template-rows: repeat(3, 100px);
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 20px;
 }
 
@@ -40,18 +41,31 @@ h1 {
     font-size: 2rem;
     cursor: pointer;
     background-color: #333;
+    color: #ffffff; /* Set text color to white for both X and O */
     border-radius: 8px;
-    transition: background 0.3s ease;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .cell:hover {
     background-color: #555;
+    scale: 1.1;
+
+    transition: background-color 0.3s;
+    transition: scale 0.3s;
+}
+
+.cell.win {
+    background-color: #88ff7d;
+    scale: 1.05;
+
+    transition: background-color 1s;
+    transition: scale 1s;
 }
 
 button {
     padding: 10px 20px;
     border: none;
-    background-color: #f0a500;
+    background-color: #333;
     color: #fff;
     font-size: 1rem;
     cursor: pointer;
@@ -59,12 +73,11 @@ button {
 }
 
 button:hover {
-    background-color: #e08a00;
+    background-color: #ffffff;
 }
 
 #status {
     margin-top: 15px;
     font-size: 1.2rem;
-    color: #f0a500;
+    color: #ffffff;
 }
-
